@@ -77,6 +77,11 @@ sub Run {
     # Save the environment
     my %ENV_SAVE = %ENV;
 
+    # TJN: Hacking for DVM
+    if ($MTT::Globals::Values->{tjn_skip_orte_cleanup}){
+        print "NOTICE - SKIPPING ORTE CLEANUP (DVM TESTING)\n";
+    }
+
     $MTT::Globals::Values->{active_phase} = $phase_name;
     Verbose("*** $phase_name phase starting\n");
 
