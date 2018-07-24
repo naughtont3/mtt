@@ -77,9 +77,17 @@ sub Run {
     # Save the environment
     my %ENV_SAVE = %ENV;
 
+#     print "===TJNDBG-DUMP-1===\n";
+#     print Dumper($MTT::Globals::Values);
+#     print "===TJNDBG-DUMP-1===\n";
+#     print "===TJNDBG-DUMP-2===\n";
+#     print Dumper($MTT::Globals);
+#     print "===TJNDBG-DUMP-2===\n";
+
     # TJN: Hacking for DVM
     if ($MTT::Globals::Values->{tjn_skip_orte_cleanup}){
         print "NOTICE - SKIPPING ORTE CLEANUP (DVM TESTING)\n";
+        #print "DEBUG - TJNFOOBAR SET TO " .  $MTT::Globals::Values->{tjn_skip_orte_cleanup} . "\n";
     }
 
     $MTT::Globals::Values->{active_phase} = $phase_name;
