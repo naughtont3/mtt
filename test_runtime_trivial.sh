@@ -12,6 +12,7 @@ rm -f -r test_scratch/*
 echo "=========================USING THIS MPICC================"
 which mpicc
 
+#python -m trace --count -C traces -t  pyclient/pymtt.py --verbose  test_runtime_trivial.ini
 pyclient/pymtt.py --verbose  test_runtime_trivial.ini
 
 
