@@ -201,8 +201,8 @@ class PRRTE(LauncherMTTTool):
             cmdargs.append("-np")
             cmdargs.append(cmds['np'])
         if cmds['ppn'] is not None:
-            cmdargs.append("-N")
-            cmdargs.append(cmds['ppn'])
+            cmdargs.append("--map-by")
+            cmdargs.append("ppr:" + cmds['ppn'] + ":node")
         if cmds['hostfile'] is not None:
             cmdargs.append("-hostfile")
             cmdargs.append(cmds['hostfile'])
@@ -226,16 +226,23 @@ class PRRTE(LauncherMTTTool):
         pth = "prte.rnd." + str(testDef.signature)
         os.environ['PMIX_LAUNCHER_RENDEZVOUS_FILE'] = os.path.join(os.getcwd(), pth)
 
+        # Set dvm-uri to match rndz file (used by prun and pterm)
+        dvm_uri_file = "file:" + os.environ['PMIX_LAUNCHER_RENDEZVOUS_FILE']
+
         # start the PRRTE DVM
         process = Popen(['prte'], stdout=PIPE, stderr=PIPE)
         # wait a little for the prte daemon to start
         time.sleep(int(cmds['waittime']))
 
+        # Add dvm-uri to prun commandline
+        cmdargs.append("--dvm-uri")
+        cmdargs.append(dvm_uri_file)
+
         # execute the tests
         self.runTests(log, cmdargs, cmds, testDef)
 
         # stop the PRRTE DVM
-        results = testDef.execmd.execute(cmds, ["prun", "--terminate"], testDef)
+        results = testDef.execmd.execute(cmds, ["pterm", "--dvm-uri", dvm_uri_file], testDef)
 
         # cleanup the environ
         del os.environ['PMIX_LAUNCHER_RENDEZVOUS_FILE']
